@@ -1,0 +1,19 @@
+meta {
+  name: Create address
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/addresses
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "street": "1A Rue Jules Renard",
+    "zip": 30100,
+    "city": "Ales"
+  }
+}
