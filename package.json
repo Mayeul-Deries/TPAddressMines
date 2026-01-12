@@ -23,15 +23,8 @@
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^6.7.1",
     "@typescript-eslint/parser": "^6.7.1",
-<<<<<<< HEAD
-    "eslint": "^8.48.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.2.2"
-=======
-    "@typescript-eslint/eslint-plugin": "^6.7.1",
     "jest": "^29.0.0",
     "ts-jest": "^29.0.0",
     "@types/jest": "^29.0.0"
->>>>>>> c7907b0f520c1ee314988e38a5405044c128da0a
   }
 }
