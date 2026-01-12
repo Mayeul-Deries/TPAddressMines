@@ -15,11 +15,11 @@ export class UserService implements UserPort {
   }
 
   async getUser(id: string): Promise<User | null> {
-    return this.repo.findById(id);
+    return this.repos.findById(id);
   }
 
   async createUser(input: Omit<User, 'id'>): Promise<User> {
     // Business rules could be applied here
-    return this.repo.save(input);
+    return this.repos.save(input);
   }
 }
