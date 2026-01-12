@@ -9,17 +9,24 @@ export class UserService implements UserPort {
       let allUsers: User[] = [];
      for (let repo of this.repos) {
        const users = await repo.findAll();
-       allUsers.concat(users);
+       allUsers = allUsers.concat(users);
      }
      return allUsers;
   }
 
   async getUser(id: string): Promise<User | null> {
-    return this.repos.findById(id);
+    for (let repo of this.repos) {
+      const user = await repo.findById(id);
+      if (user) return user;
+    }
+    return null;
   }
 
   async createUser(input: Omit<User, 'id'>): Promise<User> {
     // Business rules could be applied here
-    return this.repos.save(input);
+    if (this.repos.length === 0) {
+      throw new Error('No repository available to save user');
+    }
+    return this.repos[0].save(input);
   }
 }
