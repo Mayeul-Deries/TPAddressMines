@@ -1,4 +1,4 @@
-import { Address } from '../../domain/address';
+import { Address } from '../../domain/user';
 
 export interface AddressRepositoryPort {
   findAll(): Promise<Address[]>;

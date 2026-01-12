@@ -1,4 +1,4 @@
-import { Address } from '../../domain/address';
+import { Address } from '../../domain/user';
 import { AddressRepositoryPort } from '../../ports/driven/repoPort';
 import { v4 as uuidv4 } from 'uuid';
 
