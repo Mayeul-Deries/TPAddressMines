@@ -7,7 +7,6 @@ export interface UserRepositoryPort {
   save(user: Omit<User, 'id'>): Promise<User>;
 }
 
-
 export interface ActivityRepositoryPort {
   findAll(): Promise<Activity[]>;
   findById(id: string): Promise<Activity | null>;
