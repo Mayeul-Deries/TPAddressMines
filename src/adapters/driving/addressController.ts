@@ -1,6 +1,6 @@
 import express from 'express';
 import { InMemoryAddressRepo } from '../driven/inMemoryAddressRepo';
-import { AddressService } from '../../services/addressService';
+import { AddressService } from '../../services/userService';
 import { Address } from "../../domain/user";
 
 const router = express.Router();
