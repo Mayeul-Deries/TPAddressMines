@@ -1,84 +1,263 @@
 openapi: 3.0.0
 info:
-  title: AddressApp API
-  version: 0.1.0
+  title: Fit & Fun API
+  description: API de suivi de performances sportives et de données biométriques
+  version: 1.0.0
+
+tags:  
+  - name: user
+    description: Opérations sur l'utilisateur
+  - name: activity
+    description: Opérations sur l'activité
+  - name: Statistic
+    description: Statistiques sur un utilisateur et ses activités
 paths:
-  /addresses:
+  /users:
+    post:
+      tags:
+        - User
+      summary: Créer un profil athlète
+      responses:
+        '201':
+          description: Utilisateur créé avec succès
+        '400':
+          description: JSON invalide
+        '409':
+          description: Email déjà pris
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
     get:
-      summary: List addresses
+      tags:
+        - User
+      summary: Liste de tous les utilisateurs
       responses:
         '200':
-          description: OK
+          description: Succès
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Address'
-    post:
-      summary: Create address
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AddressInput'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Address'
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Erreur serveur
 
-  /addresses/{id}:
+  /users/{id}:
     get:
-      summary: Get address by id
+      tags:
+        - User
+      summary: Détails d'un profil
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
-          description: OK
+          description: Succès
+        '400':
+          description: ID invalide
+        '404':
+          description: ID inexistant
+    put:
+      tags:
+        - User
+      summary: Update profil
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Mis à jour
+        '400':
+          description: Manque un champ obligatoire
+        '404':
+          description: ID inexistant
+        '422':
+          description: Valeurs aberrantes ex
+    delete:
+      tags:
+        - User
+      summary: Supprimer un utilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Supprimé
+        '400':
+          description: ID invalide
+        '404':
+          description: ID inexistant
+
+  /activities:
+    post:
+      tags:
+        - Activity
+      summary: Enregistrer une séance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activity'
+      responses:
+        '201':
+          description: Activité créée
+        '400':
+          description: JSON invalide
+        '404':
+          description: User inconnu (via user_id)
+        '422':
+          description: Logique métier
+
+  /activities/{id}:
+    get:
+      tags:
+        - Activity
+      summary: Détails d'une séance
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succès
+        '404':
+          description: Activité inexistante
+    delete:
+      tags:
+        - Activity
+      summary: Supprimer une séance
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Supprimé
+        '404':
+          description: Activité inexistante
+
+  /users/{id}/activities:
+    get:
+      tags:
+        - Activity
+      summary: Liste des séances d'un utilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succès
+        '404':
+          description: User inconnu
+
+  /users/{id}/stats:
+    get:
+      tags:
+        - Statistic
+      summary: Agrégat - Dashboard de l'utilisateur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Statistiques calculées
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Address'
+                type: object
+                properties:
+                  imc:
+                    type: number
+                  total_duration_min:
+                    type: integer
+                  weekly_calories:
+                    type: integer
         '404':
-          description: Not Found
+          description: User inconnu
 
 components:
   schemas:
-    Address:
+    User:
       type: object
+      required: [surname, name, email, height, weight, main_sport]
       properties:
         id:
           type: string
-        street:
+          format: uuid
+          readOnly: true
+        surname:
           type: string
-        city:
+        name:
           type: string
-        zip:
+        age:
+          type: integer
+        email:
           type: string
-      required:
-        - id
-        - street
-        - city
-        - zip
-
-    AddressInput:
+          format: email
+        height:
+          type: integer
+          description: Taille en cm
+        weight:
+          type: number
+          format: float
+          description: Poids en kg
+        main_sport:
+          type: string
+          enum: [Running, Swimming, Weightlifting, FootBall, BasketBall]
+        nationality:
+          type: string
+    Activity:
       type: object
+      required: [user_id, type, duration_min, calories, timestamp]
       properties:
-        street:
+        id:
           type: string
-        city:
+          format: uuid
+          readOnly: true
+        user_id:
           type: string
-        zip:
+          format: uuid
+        type:
           type: string
-      required:
-        - street
-        - city
-        - zip
+          description: "Exemple: foot, basket, salle..."
+        duration_min:
+          type: integer
+        calories:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
