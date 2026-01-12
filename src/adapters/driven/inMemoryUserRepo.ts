@@ -10,7 +10,7 @@ export class InMemoryUserRepo implements UserRepositoryPort {
   }
 
   async findById(id: string): Promise<User | null> {
-    const found = store.find((s) => s.id === id);
+    const found = store.find(s => s.id === id);
     return found ?? null;
   }
 
@@ -18,5 +18,23 @@ export class InMemoryUserRepo implements UserRepositoryPort {
     const newUser: User = { id: uuidv4(), ...user };
     store.push(newUser);
     return newUser;
+  }
+
+  async update(id: string, updates: Partial<User>): Promise<User | null> {
+    const index = store.findIndex(u => u.id === id);
+    if (index === -1) {
+      return null;
+    }
+    Object.assign(store[index], updates);
+    return store[index];
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const index = store.findIndex(u => u.id === id);
+    if (index === -1) {
+      return false;
+    }
+    store.splice(index, 1);
+    return true;
   }
 }

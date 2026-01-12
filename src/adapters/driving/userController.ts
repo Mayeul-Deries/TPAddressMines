@@ -123,4 +123,26 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// GET /users/:id/stats - Dashboard de l'utilisateur
+router.get('/:id/stats', async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
+
+    const user = await service.getUser(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const stats = await service.getUserStats(id);
+    res.json(stats);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+});
+
 export default router;
