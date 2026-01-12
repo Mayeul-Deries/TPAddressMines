@@ -2,23 +2,23 @@ import { User } from '../domain/user';
 import { UserRepositoryPort } from '../ports/driven/repoPort';
 import { UserPort } from "../ports/driving/userPort";
 
-export class AddressService implements UserPort {
+export class UserService implements UserPort {
   constructor(private repos: UserRepositoryPort[]) {}
 
-  async listAddresses(): Promise<User[]> {
-      let allAddresses: User[] = [];
+  async listUsers(): Promise<User[]> {
+      let allUsers: User[] = [];
      for (let repo of this.repos) {
-       const addresses = await repo.findAll();
-       allAddresses.concat(addresses);
+       const users = await repo.findAll();
+       allUsers.concat(users);
      }
-     return allAddresses;
+     return allUsers;
   }
 
-  async getAddress(id: string): Promise<User | null> {
+  async getUser(id: string): Promise<User | null> {
     return this.repo.findById(id);
   }
 
-  async createAddress(input: Omit<User, 'id'>): Promise<User> {
+  async createUser(input: Omit<User, 'id'>): Promise<User> {
     // Business rules could be applied here
     return this.repo.save(input);
   }
