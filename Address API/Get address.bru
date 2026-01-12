@@ -1,0 +1,15 @@
+meta {
+  name: Get address
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/addresses/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 1
+}
