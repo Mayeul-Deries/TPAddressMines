@@ -1,22 +1,22 @@
-import { Address } from '../../domain/user';
-import { AddressRepositoryPort } from '../../ports/driven/repoPort';
+import { User } from '../../domain/user';
+import { UserRepositoryPort } from '../../ports/driven/repoPort';
 import { v4 as uuidv4 } from 'uuid';
 
-const store: Address[] = [];
+const store: User[] = [];
 
-export class InMemoryAddressRepo implements AddressRepositoryPort {
-  async findAll(): Promise<Address[]> {
+export class InMemoryUserRepo implements UserRepositoryPort {
+  async findAll(): Promise<User[]> {
     return store.slice();
   }
 
-  async findById(id: string): Promise<Address | null> {
+  async findById(id: string): Promise<User | null> {
     const found = store.find((s) => s.id === id);
     return found ?? null;
   }
 
-  async save(address: Omit<Address, 'id'>): Promise<Address> {
-    const newAddress: Address = { id: uuidv4(), ...address };
-    store.push(newAddress);
-    return newAddress;
+  async save(user: Omit<User, 'id'>): Promise<User> {
+    const newUser: User = { id: uuidv4(), ...user };
+    store.push(newUser);
+    return newUser;
   }
 }
