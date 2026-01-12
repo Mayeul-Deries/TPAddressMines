@@ -3,13 +3,15 @@ import * as YAML from 'yaml';
 import swaggerUi from 'swagger-ui-express';
 import addressController from './adapters/driving/addressController';
 import path from 'path';
+import * as fs from "node:fs";
 
 const app = express();
 app.use(express.json());
 
-const swaggerPath = path.resolve(__dirname, '..', 'openapi.yaml');
-const swaggerDoc = YAML.parse(swaggerPath);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+const file  = fs.readFileSync('./openapi.yaml', 'utf8')
+const swaggerDocument = YAML.parse(file)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/addresses', addressController);
 
