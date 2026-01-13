@@ -30,4 +30,28 @@ describe('inMemoryActivityRepo', () => {
     expect(allActivities).toEqual(activities);
     expect(allActivities).not.toBe(activities); // Ensure it's a copy
   });
+
+  it('should assign an id when saving an activity without one', async () => {
+    activities = [];
+    repo = new InMemoryActivityRepo(activities);
+    const activityData = new Activity('1', 'Running', 45, 400, new Date());
+    const savedActivity = await repo.save(activityData as any);
+
+    expect(savedActivity).toHaveProperty('id');
+    expect(typeof savedActivity.id).toBe('string');
+    expect(activities.length).toBe(1);
+  });
+
+  it('should find an activity by id or return null when not found', async () => {
+    const a = new Activity('1', 'Cycling', 60, 600, new Date(), 'find-me');
+    activities = [a];
+    repo = new InMemoryActivityRepo(activities);
+
+    const found = await repo.findById('find-me');
+    expect(found).not.toBeNull();
+    expect(found).toEqual(a);
+
+    const notFound = await repo.findById('nope');
+    expect(notFound).toBeNull();
+  });
 })
