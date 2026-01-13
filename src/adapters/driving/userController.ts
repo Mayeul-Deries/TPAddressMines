@@ -1,12 +1,14 @@
 import express from 'express';
 import { InMemoryUserRepo } from '../driven/inMemoryUserRepo';
+import { InMemoryActivityRepo } from '../driven/inMemoryActivityRepo';
 import { UserService } from '../../services/userService';
 import { User } from '../../domain/user';
 
 const router = express.Router();
 
 const repo = new InMemoryUserRepo();
-const service = new UserService(repo);
+const activityRepo = new InMemoryActivityRepo();
+const service = new UserService([repo], activityRepo);
 
 // POST /users - Créer un profil
 router.post('/', async (req, res) => {

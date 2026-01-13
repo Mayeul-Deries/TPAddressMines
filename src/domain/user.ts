@@ -9,8 +9,9 @@ export class User {
   weight: number;
   main_sport: 'Running' | 'Swimming' | 'Weightlifting' | 'FootBall' | 'BasketBall';
   nationality: string;
+  gender?: 'male' | 'female';
 
-  constructor(surname: string, name: string, age: number, email: string, height: number, weight: number, main_sport: 'Running' | 'Swimming' | 'Weightlifting' | 'FootBall' | 'BasketBall', nationality: string, id?: string) {
+  constructor(surname: string, name: string, age: number, email: string, height: number, weight: number, main_sport: 'Running' | 'Swimming' | 'Weightlifting' | 'FootBall' | 'BasketBall', nationality: string, id?: string, gender?: 'male' | 'female') {
     this.id = id;
     this.surname = surname;
     this.name = name;
@@ -20,6 +21,7 @@ export class User {
     this.weight = weight;
     this.main_sport = main_sport;
     this.nationality = nationality;
+    this.gender = gender || 'male';
   }
 
   getFullAddress(): string {
