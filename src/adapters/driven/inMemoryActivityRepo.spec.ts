@@ -10,25 +10,24 @@ describe('inMemoryActivityRepo', () => {
   beforeEach(async () => {
     activities = [];
     repo = new InMemoryActivityRepo(activities);
-  })
+  });
 
   it('should save an activity', async () => {
-    const activityData = new Activity("1", 'Running', 30, 300, new Date(), '10:00');
+    const activityData = new Activity('1', 'Running', 30, 300, new Date(), '10:00');
     const savedActivity = await repo.save(activityData);
 
     expect(savedActivity).toHaveProperty('id');
     expect(savedActivity.type).toBe(activityData.type);
-    console.log(savedActivity);
-    
+
     expect(activities.length).toBe(1);
   });
 
   it('should get all activities by duplicating variable', async () => {
-    activities = [new Activity("1", 'Running', 30, 300, new Date(), '10:00')];
+    activities = [new Activity('1', 'Running', 30, 300, new Date(), '10:00')];
     repo = new InMemoryActivityRepo(activities);
     const allActivities = await repo.findAll();
     expect(allActivities).toEqual(activities);
-    expect(allActivities).not.toBe(activities); // Ensure it's a copy
+    expect(allActivities).not.toBe(activities);
   });
 
   it('should assign an id when saving an activity without one', async () => {
@@ -54,4 +53,4 @@ describe('inMemoryActivityRepo', () => {
     const notFound = await repo.findById('nope');
     expect(notFound).toBeNull();
   });
-})
+});
