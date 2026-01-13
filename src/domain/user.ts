@@ -23,9 +23,6 @@ export class User {
     this.nationality = nationality;
     this.gender = gender || 'male';
   }
-
-  getFullAddress(): string {
-    return `${this.surname}, ${this.name}, ${this.age}, ${this.email}, ${this.height}, ${this.weight}, ${this.main_sport}, ${this.nationality}`;
-  }
+  
 }
 

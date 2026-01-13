@@ -18,26 +18,27 @@ export class InMemoryUserRepo implements UserRepositoryPort {
   }
 
   async save(user: Omit<User, 'id'>): Promise<User> {
-    const newUser: User = { id: uuidv4(), ...user };
+    // Ensure an id is set even if the passed User instance has an undefined `id` property.
+    const newUser: User = { ...user, id: (user as any).id ?? uuidv4() } as User;
     this.store.push(newUser);
     return newUser;
   }
 
   async update(id: string, updates: Partial<User>): Promise<User | null> {
-    const index = store.findIndex(u => u.id === id);
+    const index = this.store.findIndex(u => u.id === id);
     if (index === -1) {
       return null;
     }
-    Object.assign(store[index], updates);
-    return store[index];
+    Object.assign(this.store[index], updates);
+    return this.store[index];
   }
 
   async delete(id: string): Promise<boolean> {
-    const index = store.findIndex(u => u.id === id);
+    const index = this.store.findIndex(u => u.id === id);
     if (index === -1) {
       return false;
     }
-    store.splice(index, 1);
+    this.store.splice(index, 1);
     return true;
   }
 }

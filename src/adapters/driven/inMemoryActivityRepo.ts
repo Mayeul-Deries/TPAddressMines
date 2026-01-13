@@ -25,9 +25,7 @@ export class InMemoryActivityRepo implements ActivityRepositoryPort {
 
   async update(id: string, updates: Partial<Activity>): Promise<Activity | null> {
     const index = this.store.findIndex(a => a.id === id);
-    if (index === -1) {
-      return null;
-    }
+    if (index === -1) return null;
     Object.assign(this.store[index], updates);
     return this.store[index];
   }

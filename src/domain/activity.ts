@@ -15,7 +15,4 @@ export class Activity {
     this.timestamp = timestamp;
   }
 
-  getFullAddress(): string {
-    return `${this.type} for ${this.duration} minutes, burning ${this.calories} calories on ${this.timestamp.toISOString()}`;
-  }
 }

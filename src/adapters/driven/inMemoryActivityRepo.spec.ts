@@ -53,4 +53,38 @@ describe('inMemoryActivityRepo', () => {
     const notFound = await repo.findById('nope');
     expect(notFound).toBeNull();
   });
+
+  it('should update an activity by id and return the updated activity', async () => {
+    const a = new Activity('1', 'Cycling', 60, 600, new Date(), 'u1');
+    activities = [a];
+    repo = new InMemoryActivityRepo(activities);
+
+    const updated = await repo.update('u1', { duration: 90, calories: 900 });
+    expect(updated).not.toBeNull();
+    expect(updated!.duration).toBe(90);
+    expect(updated!.calories).toBe(900);
+    // ensure the store was mutated
+    expect(activities[0].duration).toBe(90);
+  });
+
+  it('returns null when updating a non-existing activity', async () => {
+    activities = [];
+    repo = new InMemoryActivityRepo(activities);
+
+    const updated = await repo.update('no-id', { duration: 10 });
+    expect(updated).toBeNull();
+  });
+
+  it('should delete an activity by id and return true, or false if not found', async () => {
+    const a = new Activity('1', 'Cycling', 60, 600, new Date(), 'd1');
+    activities = [a];
+    repo = new InMemoryActivityRepo(activities);
+
+    const deleted = await repo.delete('d1');
+    expect(deleted).toBe(true);
+    expect(activities.length).toBe(0);
+
+    const deleted2 = await repo.delete('nope');
+    expect(deleted2).toBe(false);
+  });
 });
