@@ -5,18 +5,21 @@ import { v4 as uuidv4 } from 'uuid';
 const store: User[] = [];
 
 export class InMemoryUserRepo implements UserRepositoryPort {
+    
+  constructor(private readonly store: User[] = []) {}
+    
   async findAll(): Promise<User[]> {
-    return store.slice();
+    return this.store.slice();
   }
 
   async findById(id: string): Promise<User | null> {
-    const found = store.find(s => s.id === id);
+    const found = this.store.find(s => s.id === id);
     return found ?? null;
   }
 
   async save(user: Omit<User, 'id'>): Promise<User> {
     const newUser: User = { id: uuidv4(), ...user };
-    store.push(newUser);
+    this.store.push(newUser);
     return newUser;
   }
 

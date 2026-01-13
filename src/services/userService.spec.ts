@@ -18,15 +18,15 @@ describe('UserService', () => {
     service = new UserService(mockRepo as any);
   });
 
-  it('listAddresses retourne la liste fournie par le repo', async () => {
-    const sample: User[] = [{ id: '1', street: 'Main', city: 'Town', country: 'Country' } as unknown as User];
+  it('listUsers retourne la liste fournie par le repo', async () => {
+    const sample: User[] = [{ id: '1', firstName: 'John', lastName: 'Doe', age: 30, email: 'john.doe@example.com', height: 180, weight: 75, hobby: 'Running', country: 'USA', gender: 'male' } as unknown as User];
     mockRepo.findAll.mockResolvedValue(sample);
     await expect(service.listUsers()).resolves.toEqual(sample);
     expect(mockRepo.findAll).toHaveBeenCalledTimes(1);
   });
 
   it('getUser retourne l\'utilisateur quand il existe', async () => {
-    const user: User = { id: '1', street: 'Main', city: 'Town', country: 'Country' } as unknown as User;
+    const user = new User('John', 'Doe', 30, 'john.doe@example.com', 180, 75, 'Running', 'USA', 'male');
     mockRepo.findById.mockResolvedValue(user);
     await expect(service.getUser('1')).resolves.toEqual(user);
     expect(mockRepo.findById).toHaveBeenCalledWith('1');
@@ -39,8 +39,8 @@ describe('UserService', () => {
   });
 
   it('createUser appelle save et retourne l\'utilisateur créé', async () => {
-    const input: Omit<User, 'id'> = { street: 'New', city: 'City', country: 'Land' } as unknown as Omit<User, 'id'>;
-    const saved: User = { id: '2', ...input } as unknown as User;
+    const input = new User('John', 'Doe', 30, 'john.doe@example.com', 180, 75, 'Running', 'USA', 'male');
+    const saved = new User('John', 'Doe', 30, 'john.doe@example.com', 180, 75, 'Running', 'USA', 'male');
     mockRepo.save.mockResolvedValue(saved);
     await expect(service.createUser(input)).resolves.toEqual(saved);
     expect(mockRepo.save).toHaveBeenCalledWith(input);

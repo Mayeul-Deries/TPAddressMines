@@ -4,31 +4,19 @@ import { UserRepositoryPort, ActivityRepositoryPort } from '../ports/driven/repo
 import { UserPort } from '../ports/driving/userPort';
 
 export class UserService implements UserPort {
-  constructor(private repos: UserRepositoryPort[], private activityRepo?: ActivityRepositoryPort) {}
+  constructor(private readonly repo: UserRepositoryPort, private readonly activityRepo?: ActivityRepositoryPort) {}
 
   async listUsers(): Promise<User[]> {
-    let allUsers: User[] = [];
-    for (let repo of this.repos) {
-      const users = await repo.findAll();
-      allUsers = allUsers.concat(users);
-    }
-    return allUsers;
+    return this.repo.findAll();
   }
 
   async getUser(id: string): Promise<User | null> {
-    for (let repo of this.repos) {
-      const user = await repo.findById(id);
-      if (user) return user;
-    }
-    return null;
+    return this.repo.findById(id);
   }
 
   async createUser(input: Omit<User, 'id'>): Promise<User> {
     // Business rules could be applied here
-    if (this.repos.length === 0) {
-      throw new Error('No repository available to save user');
-    }
-    return this.repos[0].save(input);
+    return this.repo.save(input);
   }
 
   async updateUser(id: string, updates: Partial<User>): Promise<User | null> {
@@ -52,18 +40,11 @@ export class UserService implements UserPort {
       }
     }
 
-    // Update in the first repository
-    if (this.repos.length === 0) {
-      throw new Error('No repository available');
-    }
-    return this.repos[0].update(id, updates);
+    return this.repo.update(id, updates);
   }
 
   async deleteUser(id: string): Promise<boolean> {
-    if (this.repos.length === 0) {
-      throw new Error('No repository available');
-    }
-    return this.repos[0].delete(id);
+    return this.repo.delete(id);
   }
 
   async getUserStats(id: string): Promise<{
@@ -76,7 +57,7 @@ export class UserService implements UserPort {
     total_duration_min: number;
     weekly_calories: number;
   }> {
-    const user = await this.repos[0].findById(id);
+    const user = await this.repo.findById(id);
     if (!user) {
       throw new Error('User not found');
     }

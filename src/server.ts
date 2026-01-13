@@ -1,20 +1,35 @@
 import express from 'express';
 import * as YAML from 'yaml';
 import swaggerUi from 'swagger-ui-express';
-import userController from './adapters/driving/userController';
-import activityController from './adapters/driving/activityController';
 import * as fs from 'node:fs';
+import path from 'path';
+
+import { ActivityController } from './adapters/driving/activityController';
+import { InMemoryActivityRepo } from "./adapters/driven/inMemoryActivityRepo";
+import { ActivityService } from "./services/activityService";
+
+import { UserController } from './adapters/driving/userController';
+import { InMemoryUserRepo } from "./adapters/driven/inMemoryUserRepo";
+import { UserService } from "./services/userService";
 
 const app = express();
 app.use(express.json());
 
-const file = fs.readFileSync('./openapi.yaml', 'utf8');
-const swaggerDocument = YAML.parse(file);
+const activityRepo = new InMemoryActivityRepo();
+const userRepo = new InMemoryUserRepo();
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const file  = fs.readFileSync('./openapi.yaml', 'utf8')
+const swaggerDocument = YAML.parse(file)
 
-app.use('/users', userController);
-app.use('/activities', activityController);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+const activityService = new ActivityService(activityRepo);
+const activityController = new ActivityController(activityService);
+activityController.registerRoutes(app);
+
+const userService = new UserService(userRepo);
+const userController = new UserController(userService);
+userController.registerRoutes(app);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
