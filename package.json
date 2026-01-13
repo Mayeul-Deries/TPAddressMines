@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@jest/types": "^30.2.0",
     "express": "^4.22.1",
     "pnpm": "^10.28.0",
     "swagger-ui-express": "5.0.1",
