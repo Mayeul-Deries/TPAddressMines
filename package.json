@@ -7,7 +7,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "test:integration": "bash ./scripts/integration/run-integration.sh"
   },
   "dependencies": {
     "@jest/types": "^30.2.0",

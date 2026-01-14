@@ -1,8 +1,5 @@
 import express, { Express } from 'express';
-import { InMemoryActivityRepo } from '../driven/inMemoryActivityRepo';
-import { ActivityService } from '../../services/activityService';
 import { Activity } from '../../domain/activity';
-import { ActivityRepositoryPort } from '../../ports/driven/repoPort';
 import { ActivityPort } from '../../ports/driving/activityPort';
 import { Request, Response } from 'express';
 

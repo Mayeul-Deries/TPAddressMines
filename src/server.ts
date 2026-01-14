@@ -18,11 +18,6 @@ app.use(express.json());
 const activityRepo = new InMemoryActivityRepo();
 const userRepo = new InMemoryUserRepo();
 
-const file  = fs.readFileSync('./openapi.yaml', 'utf8')
-const swaggerDocument = YAML.parse(file)
-
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 const activityService = new ActivityService(activityRepo);
 const activityController = new ActivityController(activityService);
 activityController.registerRoutes(app);
@@ -30,6 +25,11 @@ activityController.registerRoutes(app);
 const userService = new UserService(userRepo);
 const userController = new UserController(userService);
 userController.registerRoutes(app);
+
+const file  = fs.readFileSync('./openapi.yaml', 'utf8')
+const swaggerDocument = YAML.parse(file)
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
