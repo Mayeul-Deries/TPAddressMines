@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  mysql_test:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "tpaddress"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+
+  test:
+    build: .
+    image: tpaddressmines_app:latest
+    depends_on:
+      mysql_test:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql_test
+      DB_PORT: 3306
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: tpaddress
+    command: ["sh", "-c", "npx jest --testPathPattern=src/integration --runInBand"]
+
+volumes:
+  mysql_test_data:
