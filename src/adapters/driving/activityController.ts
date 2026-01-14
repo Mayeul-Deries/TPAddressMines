@@ -27,9 +27,9 @@ export class ActivityController {
   }
 
   async createActivity(req: Request, res: Response) {
-    const { street, city, zip } = req.body;
-    if (!street || !city || !zip) {
-      return res.status(400).json({ message: 'street, city and zip required' });
+    const { userId, type, duration, calories, timestamp } = req.body;
+    if (!userId || !type || !duration || !calories || !timestamp) {
+      return res.status(400).json({ message: 'userId, type, duration, calories and timestamp required' });
     }
     const created = await this.service.createActivity(new Activity('1', 'running', 30, 5.0, new Date(), '10:00'));
     res.status(201).json(created);
