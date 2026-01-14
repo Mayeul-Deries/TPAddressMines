@@ -28,7 +28,9 @@ export class ActivityController {
     if (!userId || !type || !duration || !calories || !timestamp) {
       return res.status(400).json({ message: 'userId, type, duration, calories and timestamp required' });
     }
-    const created = await this.service.createActivity(new Activity('1', 'running', 30, 5.0, new Date(), '10:00'));
+    const created = await this.service.createActivity(
+      new Activity(userId, type, duration, calories, new Date(timestamp))
+    );
     res.status(201).json(created);
   }
 

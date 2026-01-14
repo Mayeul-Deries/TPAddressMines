@@ -4,7 +4,7 @@ info:
   description: API de suivi de performances sportives et de données biométriques
   version: 1.0.0
 
-tags:  
+tags:
   - name: user
     description: Opérations sur l'utilisateur
   - name: activity
@@ -242,7 +242,7 @@ components:
           type: string
     Activity:
       type: object
-      required: [user_id, type, duration_min, calories, timestamp]
+      required: [user_id, type, duration, calories, timestamp]
       properties:
         id:
           type: string
@@ -253,8 +253,8 @@ components:
           format: uuid
         type:
           type: string
-          description: "Exemple: foot, basket, salle..."
-        duration_min:
+          description: 'Exemple: foot, basket, salle...'
+        duration:
           type: integer
         calories:
           type: integer
